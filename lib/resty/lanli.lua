@@ -2,7 +2,7 @@ local setmetatable = setmetatable
 
 local lanli = {}
 
-function lanli:__call(source, opts)
+function lanli:__call()
     -- TODO: Implement sane defaults
 end
 

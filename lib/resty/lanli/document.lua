@@ -1,6 +1,6 @@
+local lib          = require "resty.lanli.library"
 local buffer       = require "resty.lanli.buffer"
 local new_buf      = buffer.new
-local lib          = require "resty.lanli.library"
 local ffi          = require "ffi"
 local ffi_gc       = ffi.gc
 local ffi_cdef     = ffi.cdef
@@ -73,13 +73,13 @@ local flags = {
     comments_parse = lib.LANLI_FLAG_COMMENTS_PARSE,
     comments_skip  = lib.LANLI_FLAG_COMMENTS_SKIP,
     invalid_skip   = lib.LANLI_FLAG_INVALID_SKIP,
-    levels_strict  = lib.LANLI_FLAG_LEVELS_STRICT,
+    levels_strict  = lib.LANLI_FLAG_LEVELS_STRICT
 }
 
 local document = { flags = flags }
 document.__index = document
 
-function document.new(callback, flags, levels, max_nesting, max_attributes)
+function document.new(callback, opaque, flags, levels, max_nesting, max_attributes)
     local t = type(flags)
     local f = 0
     if t == "number" then
@@ -93,7 +93,7 @@ function document.new(callback, flags, levels, max_nesting, max_attributes)
             end
         end
     end
-    return setmetatable({ context = ffi_gc(lib.lanli_document_new(callback or lib.lanli_callback_strict_post, nil, f, levels or 0, max_nesting or 16, max_attributes or 8), lib.lanli_document_free) }, document)
+    return setmetatable({ context = ffi_gc(lib.lanli_document_new(callback or lib.lanli_callback_strict_post, opaque, f, levels or 0, max_nesting or 16, max_attributes or 8), lib.lanli_document_free) }, document)
 end
 function document:render(data)
     local str = tostring(data)
